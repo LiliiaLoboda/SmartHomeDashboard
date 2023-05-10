@@ -36,9 +36,9 @@ function updateSlider(sliderValue, id) {
     switchIcon(id, "orange", isChecked);
     switchBorderColor(id, "orange", isChecked);
     const icon = document.getElementById("icon_" + id);
-    if(isChecked)
-         icon.innerHTML = "brightness_5"
-    else if(sliderValue === "100")
+    if (isChecked)
+        icon.innerHTML = "brightness_5"
+    else if (sliderValue === "100")
         icon.innerHTML = "brightness_7"
     else
         icon.innerHTML = "brightness_6"

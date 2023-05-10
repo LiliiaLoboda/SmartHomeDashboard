@@ -1,4 +1,4 @@
-{% from 'macros.html' import lightSwitch, dimmerSlider %}
+{% from 'macros.html' import lightSwitch, dimmerSlider, thermostat %}
 
 <!DOCTYPE html>
 <html>
@@ -33,6 +33,10 @@
         <div class="card-title">
             <h2>Bathroom</h2>
         </div>
+        <div class="card-body">
+            {{ lightSwitch("Shower Light", "lightSwitch6", session['device_lightSwitch6'] == 'true') }}
+            {{ thermostat("Thermostat", "thermostat1") }}
+        </div>
     </div>
     <div class="mdc-card">
         <div class="card-title">
@@ -40,6 +44,7 @@
         </div>
         <div class="card-body">
             {{ dimmerSlider("Dimmerable", "dimmerableLight", session['device_dimmerableLight']) }}
+            {{ thermostat("Thermostat", "thermostat2", 1000) }}
         </div>
     </div>
 </div>
