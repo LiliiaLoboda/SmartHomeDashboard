@@ -33,6 +33,9 @@ h1, h2, h3, h4, h5, p {
     display: flex;
     gap: 1rem;
     justify-content: space-evenly;
+    flex-grow: 1;
+    align-items: center;
+    align-content: center;
 }
 
 .device-outer-container {
@@ -44,6 +47,7 @@ h1, h2, h3, h4, h5, p {
     gap: 1rem;
     align-items: center;
     transition-duration: 200ms;
+    justify-content: center;
 }
 
 .device-title-container {
@@ -60,4 +64,24 @@ h1, h2, h3, h4, h5, p {
 
 .slider-container span {
     font-weight: bold;
+}
+
+.temperature-value {
+    font-size: x-large;
+}
+
+.temperature-update-time {
+    font-size: x-small;
+    color: gray;
+}
+
+.temperature-labels-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.temperature-title-container {
+    display: flex;
+    flex-direction: column;
 }
