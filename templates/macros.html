@@ -1,0 +1,48 @@
+{% macro usedalot(somevalue) %}
+    <div class="usedalot">{{ somevalue }}</div>
+{% endmacro %}
+
+{% macro lightSwitch(name, status, id) %}
+    <div class="light-switch-container">
+        <div class="light-switch-title">
+            <span
+                    id="icon_{{ id }}"
+                    class="material-symbols-outlined"
+                    style="
+                            font-variation-settings: 'FILL' {{ 1 if status else 0 }}, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+                            color: {{ "orange" if status else "gray" }}
+                            "
+            >
+                lightbulb
+            </span>
+            <h4>{{ name }}</h4>
+        </div>
+
+        <button
+                id="{{ id }}-button"
+                name="my_checkbox"
+                class="mdc-switch {{ 'mdc-switch--selected' if status else 'mdc-switch--unselected' }} " type="button"
+                role="switch"
+                aria-checked="{{ 'true' if status else 'false' }}"
+                onclick="updateToggle(this, '{{ id }}')"
+        >
+            <div class="mdc-switch__track"></div>
+            <div class="mdc-switch__handle-track">
+                <div class="mdc-switch__handle">
+                    <div class="mdc-switch__shadow">
+                        <div class="mdc-elevation-overlay"></div>
+                    </div>
+                    <div class="mdc-switch__ripple"></div>
+                    <div class="mdc-switch__icons">
+                        <svg class="mdc-switch__icon mdc-switch__icon--on" viewBox="0 0 24 24">
+                            <path d="M19.69,5.23L8.96,15.96l-4.23-4.23L2.96,13.5l6,6L21.46,7L19.69,5.23z"/>
+                        </svg>
+                        <svg class="mdc-switch__icon mdc-switch__icon--off" viewBox="0 0 24 24">
+                            <path d="M20 13H4v-2h16v2z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </button>
+    </div>
+{% endmacro %}
