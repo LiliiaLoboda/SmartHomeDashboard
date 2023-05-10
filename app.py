@@ -12,7 +12,7 @@ def load_dashboard():
 @app.route('/set_device', methods=['POST'])
 def set_device():
     data = request.json
-    session["device_"+data['id']] = data['value'] == 'true'
+    session["device_"+data['id']] = data['value']
     print("Updated device_" + data['id'] + ": set to " + data['value'])
     return jsonify(success=True)
 
