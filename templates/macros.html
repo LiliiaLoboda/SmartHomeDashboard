@@ -1,31 +1,16 @@
-{% macro usedalot(somevalue) %}
-    <div class="usedalot">{{ somevalue }}</div>
-{% endmacro %}
-
-{% macro lightSwitch(name, status, id) %}
-    <div class="light-switch-container">
-        <div class="light-switch-title">
-            <span
-                    id="icon_{{ id }}"
-                    class="material-symbols-outlined"
-                    style="
-                            font-variation-settings: 'FILL' {{ 1 if status else 0 }}, 'wght' 400, 'GRAD' 0, 'opsz' 48;
-                            color: {{ "orange" if status else "gray" }}
-                            "
-            >
-                lightbulb
-            </span>
-            <h4>{{ name }}</h4>
+{% macro lightSwitch(label, id, value) %}
+    <div class="device-outer-container"
+         id="container_{{ id }}" style="border-color: {{ "orange" if value else "lightGray" }}">
+        <div class="device-title-container">
+            <span id="icon_{{ id }}" class="material-symbols-outlined"
+                  style="font-variation-settings: 'FILL' {{ 1 if value else 0 }}, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+                          color: {{ "orange" if value else "gray" }}">lightbulb</span>
+            <h4>{{ label }}</h4>
         </div>
 
-        <button
-                id="{{ id }}-button"
-                name="my_checkbox"
-                class="mdc-switch {{ 'mdc-switch--selected' if status else 'mdc-switch--unselected' }} " type="button"
-                role="switch"
-                aria-checked="{{ 'true' if status else 'false' }}"
-                onclick="updateToggle(this, '{{ id }}')"
-        >
+        <button id="{{ id }}-button" name="my_checkbox" role="switch" aria-checked="{{ 'true' if value else 'false' }}"
+                class="mdc-switch {{ 'mdc-switch--selected' if value else 'mdc-switch--unselected' }} " type="button"
+                onclick="updateLightSwitch(this, '{{ id }}')">
             <div class="mdc-switch__track"></div>
             <div class="mdc-switch__handle-track">
                 <div class="mdc-switch__handle">
@@ -46,3 +31,25 @@
         </button>
     </div>
 {% endmacro %}
+
+{% macro dimmerSlider(label, id, value) %}
+    <div id="container_{{ id }}" class="device-outer-container" style="border-color: {{ "lightGray" if value == "0" else "orange" }}">
+        <div class="device-title-container">
+            <span id="icon_{{ id }}" class="material-symbols-outlined"
+                  style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+                          color: {{ "gray" if value == "0" else "orange" }}">
+                {% if value == "0" %} brightness_5
+                {% elif value == "100" %} brightness_7
+                {% else %} brightness_6
+                {% endif %}
+            </span>
+            <h4>{{ label }}</h4>
+        </div>
+        <div class="slider-container">
+            <input type="range" min="0" max="100" value="{{ value }}" onchange="updateSlider(this.value, '{{ id }}')"/>
+            <span id="valueLabel_{{ id }}">{{ value }}%</span>
+        </div>
+    </div>
+{% endmacro %}
+
+
