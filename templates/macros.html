@@ -36,7 +36,7 @@
     <div id="container_{{ id }}" class="device-outer-container" style="border-color: {{ "lightGray" if value == "0" else "orange" }}">
         <div class="device-title-container">
             <span id="icon_{{ id }}" class="material-symbols-outlined"
-                  style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+                  style="font-variation-settings: 'FILL' {{ 0 if value == "0" else 1 }}, 'wght' 400, 'GRAD' 0, 'opsz' 48;
                           color: {{ "gray" if value == "0" else "orange" }}">
                 {% if value == "0" %} brightness_5
                 {% elif value == "100" %} brightness_7
