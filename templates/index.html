@@ -1,3 +1,5 @@
+{% from 'macros.html' import lightSwitch %}
+
 <!DOCTYPE html>
 <html>
 
@@ -19,6 +21,10 @@
         <div class="card-title">
             <h2>Bedroom</h2>
         </div>
+        <div class="card-body">
+            {{ lightSwitch("Light 1", session['device_lightSwitch1'], "lightSwitch1") }}
+            {{ lightSwitch("Light 2", session['device_lightSwitch2'], "lightSwitch2") }}
+        </div>
     </div>
     <div class="mdc-card">
         <div class="card-title">
@@ -32,4 +38,9 @@
     </div>
 </div>
 </body>
+
+<script type="text/javascript"
+        src="{{ url_for('static', filename='functions.js') }}">
+</script>
+
 </html>
