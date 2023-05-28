@@ -60,3 +60,21 @@ function ajaxUpdateValue(value, id) {
     const data = {value, id}
     xhr.send(JSON.stringify(data));
 }
+
+function ajaxUpdateThresholds(id) {
+    const lowerThreshold = document.getElementById('inputMin_'+id).value;
+    const upperThreshold = document.getElementById('inputMax_'+id).value;
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/set_threshold');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+        var response = JSON.parse(xhr.responseText);
+        if (response.success) {
+            console.log('Thresholds updated successfully.');
+        } else {
+            console.error('Thresholds update failed.');
+        }
+    };
+    const data = {value: {lowerThreshold, upperThreshold}, id}
+    xhr.send(JSON.stringify(data));
+}
