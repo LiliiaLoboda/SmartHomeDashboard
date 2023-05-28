@@ -70,9 +70,10 @@ h1, h2, h3, h4, h5, p {
     font-size: x-large;
 }
 
-.temperature-update-time {
+.temperature-update-time, .heater-thresholds {
     font-size: x-small;
     color: gray;
+    white-space: nowrap;
 }
 
 .temperature-labels-container {
@@ -84,4 +85,16 @@ h1, h2, h3, h4, h5, p {
 .temperature-title-container {
     display: flex;
     flex-direction: column;
+}
+
+.thresholds-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 5rem;
+}
+
+.thresholds-container > .inputs {
+    display: flex;
+    gap: 1rem;
 }

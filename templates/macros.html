@@ -87,3 +87,75 @@
     </script>
 {% endmacro %}
 
+{% macro heater(label, id, value, min, max) %}
+    <div id="container_{{ id }}" class="device-outer-container"
+         style="border-color: {{ "lightGray" if value == "0" else "red" }}">
+        <div class="device-title-container">
+            <span id="icon_{{ id }}" class="material-symbols-outlined"
+                  style="font-variation-settings: 'FILL' {{ 0 if value == "0" else 1 }}, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+                          color: {{ "gray" if value == "0" else "red" }}">
+                local_fire_department
+            </span>
+            <div class="temperature-title-container">
+                <h4>{{ label }}</h4>
+                <span class="temperature-update-time">{{ min }}°C - {{ max }}°C</span>
+            </div>
+        </div>
+        <div class="heater-container">
+            <span id="valueLabel_{{ id }}">Status: {{ "Off" if value == "0" else "On" }}</span>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro thresholdsContainer(label, id, min, max) %}
+    <div id="container_{{ id }}" class="device-outer-container"
+         style="border-color: black; min-width: 10rem">
+        <div class="device-title-container">
+            <span id="icon_{{ id }}" class="material-symbols-outlined"
+                  style="font-variation-settings: 'FILL' {{ 0 if value == "0" else 1 }}, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+                          color: gray">
+                tune
+            </span>
+            <h4>{{ label }}</h4>
+        </div>
+        <div class="thresholds-container">
+            <div class="inputs">
+                <label class="mdc-text-field mdc-text-field--outlined" id="minOuter_{{ id }}">
+                  <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                      <span class="mdc-floating-label" id="minThreshold_{{ id }}">Min</span>
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                  <input type="text" class="mdc-text-field__input" aria-labelledby="minThreshold_{{ id }}"
+                         value='{{ min }}' id="inputMin_{{ id }}">
+                </label>
+
+                <label class="mdc-text-field mdc-text-field--outlined" id="maxOuter_{{ id }}">
+                  <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                      <span class="mdc-floating-label" id="maxThreshold_{{ id }}">Max</span>
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                  <input type="text" class="mdc-text-field__input" aria-labelledby="maxThreshold_{{ id }}"
+                         value='{{ max }}' id="inputMax_{{ id }}">
+                </label>
+            </div>
+            <button
+                    class="mdc-button mdc-button--outlined"
+                    type="submit"
+                    onclick="ajaxUpdateThresholds('{{ id }}')"
+            >
+              <span class="mdc-button__ripple"></span>
+              <span class="mdc-button__label">Save</span>
+            </button>
+        </div>
+    </div>
+    <script>
+    const minTextField = new mdc.textField.MDCTextField(document.querySelector('#minOuter_{{ id }}'));
+    const maxTextField = new mdc.textField.MDCTextField(document.querySelector('#maxOuter_{{ id }}'));
+    </script>
+{% endmacro %}
