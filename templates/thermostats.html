@@ -1,0 +1,71 @@
+{% macro randomicThermostat(label, id, interval=5000) %}
+    <div id="container_{{ id }}" class="device-outer-container"
+         style="border-color: blue">
+        <div class="device-title-container">
+            <span id="icon_{{ id }}" class="material-symbols-outlined"
+                  style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+                          color: blue">
+                device_thermostat
+            </span>
+            <div class="temperature-title-container">
+                <h4>{{ label }}</h4>
+                <span class="temperature-update-time">Frequency: {{ interval }}ms</span>
+            </div>
+        </div>
+        <div class="temperature-labels-container">
+            <span class="temperature-value" id="temperatureValue_{{ id }}"></span>
+            <span class="temperature-update-time" id="temperatureUpdateTime_{{ id }}"></span>
+        </div>
+    </div>
+    <script>
+        function getRandomTemperatureFromBackend(thermostatId) {
+            fetch('/get_random_temperature?id=' + thermostatId)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('temperatureValue_' + thermostatId).textContent = data.temperature + "°C";
+                    document.getElementById('temperatureUpdateTime_' + thermostatId).textContent = "Last update: " + new Date().toLocaleTimeString();
+                });
+        }
+
+        getRandomTemperatureFromBackend("{{ id }}");
+        {% if interval != 0 %} setInterval(() => getRandomTemperatureFromBackend("{{ id }}"), {{ interval }}); {% endif %}
+    </script>
+{% endmacro %}
+
+
+{% macro thermostatForHeater(label, id, interval=3700, heater=None) %}
+    <div id="container_{{ id }}" class="device-outer-container"
+         style="border-color: blue">
+        <div class="device-title-container">
+            <span id="icon_{{ id }}" class="material-symbols-outlined"
+                  style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+                          color: blue">
+                device_thermostat
+            </span>
+            <div class="temperature-title-container">
+                <h4>{{ label }}</h4>
+                <span class="temperature-update-time">Frequency: {{ interval }}ms</span>
+            </div>
+        </div>
+        <div class="temperature-labels-container">
+            <span class="temperature-value" id="temperatureValue_{{ id }}"></span>
+            <span class="temperature-update-time" id="temperatureUpdateTime_{{ id }}"></span>
+        </div>
+    </div>
+    <script>
+        function getTemperatureFromBackend(thermostatId, heaterId) {
+            fetch('/get_temperature?id=' + thermostatId + "&heater="+heaterId)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('temperatureValue_' + thermostatId).textContent = data.temperature + "°C";
+                    document.getElementById('temperatureUpdateTime_' + thermostatId).textContent = "Last update: " + new Date().toLocaleTimeString();
+                });
+        }
+
+        getTemperatureFromBackend("{{ id }}", "{{ heater if heater is not none else "false" }}");
+        {% if interval != 0 %} setInterval(() => getTemperatureFromBackend(
+            "{{ id }}",
+            "{{ heater if heater is not none else "false" }}"
+        ), {{ interval }}); {% endif %}
+    </script>
+{% endmacro %}

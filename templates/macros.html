@@ -53,58 +53,48 @@
     </div>
 {% endmacro %}
 
-{% macro thermostat(label, id, interval=5000) %}
-    <div id="container_{{ id }}" class="device-outer-container"
-         style="border-color: blue">
+{% macro heater(label, id, value, min, max, thermostat=None, interval=200 ) %}
+    <div id="heaterContainer_{{ id }}" class="device-outer-container">
         <div class="device-title-container">
-            <span id="icon_{{ id }}" class="material-symbols-outlined"
-                  style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
-                          color: blue">
-                device_thermostat
-            </span>
-            <div class="temperature-title-container">
-                <h4>{{ label }}</h4>
-                <span class="temperature-update-time">Frequency: {{ interval }}ms</span>
-            </div>
-        </div>
-        <div class="temperature-labels-container">
-            <span class="temperature-value" id="temperatureValue_{{ id }}"></span>
-            <span class="temperature-update-time" id="temperatureUpdateTime_{{ id }}"></span>
-        </div>
-    </div>
-    <script>
-        function updateTemperature() {
-            fetch('/get_temperature?id={{ id }}')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('temperatureValue_{{ id }}').textContent = data.temperature + "°C";
-                    document.getElementById('temperatureUpdateTime_{{ id }}').textContent = "Last update: " + new Date().toLocaleTimeString();
-                });
-        }
-
-        updateTemperature();
-        setInterval(updateTemperature, {{ interval }});
-    </script>
-{% endmacro %}
-
-{% macro heater(label, id, value, min, max) %}
-    <div id="container_{{ id }}" class="device-outer-container"
-         style="border-color: {{ "lightGray" if value == "0" else "red" }}">
-        <div class="device-title-container">
-            <span id="icon_{{ id }}" class="material-symbols-outlined"
-                  style="font-variation-settings: 'FILL' {{ 0 if value == "0" else 1 }}, 'wght' 400, 'GRAD' 0, 'opsz' 48;
-                          color: {{ "gray" if value == "0" else "red" }}">
+            <span id="heaterIcon_{{ id }}" class="material-symbols-outlined"
+                  style="font-variation-settings: 'FILL' {{ 0 if value == "0" else 1 }}, 'wght' 400, 'GRAD' 0, 'opsz' 48;">
                 local_fire_department
             </span>
             <div class="temperature-title-container">
                 <h4>{{ label }}</h4>
-                <span class="temperature-update-time">{{ min }}°C - {{ max }}°C</span>
+                <span class="temperature-update-time" id="heaterThreshold_{{ id }}">{{ min }}°C - {{ max }}°C</span>
             </div>
         </div>
         <div class="heater-container">
-            <span id="valueLabel_{{ id }}">Status: {{ "Off" if value == "0" else "On" }}</span>
+            <span id="heaterValueLabel_{{ id }}"></span>
         </div>
     </div>
+    <script>
+        function getHeaterStatus(heaterId) {
+            fetch('/get_heater_status?id=' + heaterId)
+                .then(response => response.json())
+                .then(data => {
+                    const label = document.getElementById("heaterValueLabel_" + heaterId)
+                    const container = document.getElementById("heaterContainer_"+heaterId)
+                    const icon = document.getElementById("heaterIcon_"+heaterId)
+                    if (data.status === false) {
+                        label.innerHTML = "Status: Off"
+                        container.style.borderColor = "lightGray"
+                        icon.style.color = "gray"
+                    } else {
+                        label.innerHTML = "Status: On"
+                        container.style.borderColor = "red"
+                        icon.style.color = "red"
+                    }
+                });
+        }
+
+        getHeaterStatus("{{ id }}")
+
+        {% if interval != 0 %} setInterval(() => getHeaterStatus(
+            "{{ id }}"
+        ), {{ interval }}); {% endif %}
+    </script>
 {% endmacro %}
 
 {% macro thresholdsContainer(label, id, min, max) %}
@@ -128,8 +118,8 @@
                     </span>
                     <span class="mdc-notched-outline__trailing"></span>
                   </span>
-                  <input type="text" class="mdc-text-field__input" aria-labelledby="minThreshold_{{ id }}"
-                         value='{{ min }}' id="inputMin_{{ id }}">
+                    <input type="text" class="mdc-text-field__input" aria-labelledby="minThreshold_{{ id }}"
+                           value='{{ min }}' id="inputMin_{{ id }}">
                 </label>
 
                 <label class="mdc-text-field mdc-text-field--outlined" id="maxOuter_{{ id }}">
@@ -140,8 +130,8 @@
                     </span>
                     <span class="mdc-notched-outline__trailing"></span>
                   </span>
-                  <input type="text" class="mdc-text-field__input" aria-labelledby="maxThreshold_{{ id }}"
-                         value='{{ max }}' id="inputMax_{{ id }}">
+                    <input type="text" class="mdc-text-field__input" aria-labelledby="maxThreshold_{{ id }}"
+                           value='{{ max }}' id="inputMax_{{ id }}">
                 </label>
             </div>
             <button
@@ -149,13 +139,13 @@
                     type="submit"
                     onclick="ajaxUpdateThresholds('{{ id }}')"
             >
-              <span class="mdc-button__ripple"></span>
-              <span class="mdc-button__label">Save</span>
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__label">Save</span>
             </button>
         </div>
     </div>
     <script>
-    const minTextField = new mdc.textField.MDCTextField(document.querySelector('#minOuter_{{ id }}'));
-    const maxTextField = new mdc.textField.MDCTextField(document.querySelector('#maxOuter_{{ id }}'));
+        const minTextField = new mdc.textField.MDCTextField(document.querySelector('#minOuter_{{ id }}'));
+        const maxTextField = new mdc.textField.MDCTextField(document.querySelector('#maxOuter_{{ id }}'));
     </script>
 {% endmacro %}
