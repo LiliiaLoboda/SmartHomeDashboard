@@ -1,4 +1,6 @@
-{% from 'macros.html' import lightSwitch, dimmerSlider, thermostat %}
+{% from 'macros.html' import lightSwitch, dimmerSlider, heater, thresholdsContainer %}
+{% from 'thermostats.html' import randomicThermostat, thermostatForHeater %}
+{% from 'chart.html' import temperatureChart %}
 
 <!DOCTYPE html>
 <html>
@@ -12,40 +14,56 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
     <link href="https://fonts.cdnfonts.com/css/roboto" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
 <h1 class="page-title">Smart Home</h1>
-<div class="grid-container">
-    <div class="mdc-card">
-        <div class="card-title">
-            <h2>Bedroom</h2>
+<div style="position: relative">
+    <div class="grid-container">
+        <div class="mdc-card">
+            <div class="card-title">
+                <h2>Bedroom</h2>
+            </div>
+            <div class="card-body">
+                {{ lightSwitch("Light 1", "lightSwitch1", session['device_lightSwitch1'] == 'true') }}
+                {{ lightSwitch("Light 2", "lightSwitch2", session['device_lightSwitch2'] == 'true') }}
+                {{ lightSwitch("Light 3", "lightSwitch3", session['device_lightSwitch3'] == 'true') }}
+                {{ lightSwitch("Light 4", "lightSwitch4", session['device_lightSwitch4'] == 'true') }}
+                {{ lightSwitch("Light 5", "lightSwitch5", session['device_lightSwitch5'] == 'true') }}
+            </div>
         </div>
-        <div class="card-body">
-            {{ lightSwitch("Light 1", "lightSwitch1", session['device_lightSwitch1'] == 'true') }}
-            {{ lightSwitch("Light 2", "lightSwitch2", session['device_lightSwitch2'] == 'true') }}
-            {{ lightSwitch("Light 3", "lightSwitch3", session['device_lightSwitch3'] == 'true') }}
-            {{ lightSwitch("Light 4", "lightSwitch4", session['device_lightSwitch4'] == 'true') }}
-            {{ lightSwitch("Light 5", "lightSwitch5", session['device_lightSwitch5'] == 'true') }}
+        <div class="mdc-card">
+            <div class="card-title">
+                <h2>Bathroom</h2>
+            </div>
+            <div class="card-body">
+                {{ lightSwitch("Shower Light", "lightSwitch6", session['device_lightSwitch6'] == 'true') }}
+                {{ randomicThermostat("Thermostat", "thermostat1") }}
+            </div>
         </div>
-    </div>
-    <div class="mdc-card">
-        <div class="card-title">
-            <h2>Bathroom</h2>
+        <div class="mdc-card">
+            <div class="card-title">
+                <h2>Living Room</h2>
+            </div>
+            <div class="card-body">
+                {{ dimmerSlider("Dimmerable", "dimmerableLight", session['device_dimmerableLight']) }}
+                {{ randomicThermostat("Thermostat", "thermostat2", 1000) }}
+            </div>
         </div>
-        <div class="card-body">
-            {{ lightSwitch("Shower Light", "lightSwitch6", session['device_lightSwitch6'] == 'true') }}
-            {{ thermostat("Thermostat", "thermostat1") }}
+        <div class="mdc-card">
+            <div class="card-title">
+                <h2>Office</h2>
+            </div>
+            <div class="card-body">
+                {{ thresholdsContainer("Thresholds", "system1", session['lowerThreshold'], session['upperThreshold']) }}
+                {{ thermostatForHeater("Thermostat", "thermostat3", heater='system1') }}
+                {{ heater("Heater", "system1", "10", session['lowerThreshold'], session['upperThreshold'], thermostat='thermostat3') }}
+            </div>
         </div>
-    </div>
-    <div class="mdc-card">
-        <div class="card-title">
-            <h2>Living Room</h2>
-        </div>
-        <div class="card-body">
-            {{ dimmerSlider("Dimmerable", "dimmerableLight", session['device_dimmerableLight']) }}
-            {{ thermostat("Thermostat", "thermostat2", 1000) }}
-        </div>
+        {{ temperatureChart("thermostat3") }}
+
     </div>
 </div>
 </body>

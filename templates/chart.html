@@ -1,0 +1,70 @@
+{% macro temperatureChart(thermostatId, pollInterval=500 ) %}
+    <div class="mdc-card" style="position: relative; height: 75vh; width: 100%; padding: 1rem">
+        <div class="card-title">
+            <h2>Temperature Chart</h2>
+        </div>
+        <canvas id="temperatureChart_{{ thermostatId }}"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById("temperatureChart_{{ thermostatId }}");
+
+        const line = (value) => ({
+            id: "line_" + value,
+            beforeDatasetsDraw(t, e, i) {
+                const {ctx, chartArea: {top, right, bottom, left, width, height}, scales: {x, y}} = t;
+                ctx.save();
+                ctx.strokeStyle = "grey";
+                ctx.setLineDash([3, 3])
+                ctx.strokeRect(left, y.getPixelForValue(value), width, 0)
+                ctx.restore()
+            }
+        })
+
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '°C',
+                    data: [],
+                    borderWidth: 1
+                }],
+                fill: false,
+                tension: 0.1
+            },
+            options: {
+                scales: {
+                    y: {
+                        min: 12,
+                        max: 31
+                    }
+                },
+                maintainAspectRatio: false,
+            },
+            plugins: [line({{session["upperThreshold"]}}), line({{session["lowerThreshold"]}})]
+        });
+
+
+        function fetchTemperatureHistory(thermostatId) {
+            fetch('/get_temperature_history?id=' + thermostatId)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    chart.data.labels = data.history.map(({timestamp}) => {
+                        const date = new Date(timestamp * 1000);
+                        return date.getHours() + ":" + ("0" + date.getMinutes()).substr(-2) + ":" + ("0" + date.getSeconds()).substr(-2)
+                    })
+                    chart.data.datasets[0].data = data.history.map(({temperature}) => temperature);
+                    chart.update()
+                });
+        }
+
+        fetchTemperatureHistory("{{ thermostatId }}");
+
+        setInterval(() => fetchTemperatureHistory(
+            "{{ thermostatId }}",
+        ), {{ pollInterval }});
+    </script>
+
+{% endmacro %}
