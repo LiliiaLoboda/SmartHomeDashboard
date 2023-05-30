@@ -71,6 +71,8 @@ function ajaxUpdateThresholds(id) {
         var response = JSON.parse(xhr.responseText);
         if (response.success) {
             console.log('Thresholds updated successfully.');
+            document.getElementById("heaterThreshold_"+id).innerHTML =
+                lowerThreshold+ "°C - " + upperThreshold + "°C"
         } else {
             console.error('Thresholds update failed.');
         }
