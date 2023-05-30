@@ -13,12 +13,16 @@ h1, h2, h3, h4, h5, p {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2rem;
 }
 
-.mdc-card:first-child {
+.mdc-card:first-child, .mdc-card:nth-child(4) {
     grid-column: span 2;
+}
+
+.mdc-card:nth-child(5) {
+    grid-column: span 3;
 }
 
 .page-title {
