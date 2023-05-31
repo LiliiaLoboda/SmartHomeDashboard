@@ -20,7 +20,6 @@ def load_dashboard():
 def set_device():
     data = request.json
     session["device_" + data['id']] = data['value']
-    print("Updated device_" + data['id'] + ": set to " + data['value'])
     return jsonify(success=True)
 
 
@@ -29,8 +28,6 @@ def set_threshold():
     data = request.json
     session["upperThreshold"] = data['value']['upperThreshold']
     session["lowerThreshold"] = data['value']['lowerThreshold']
-    print("Updated thresholds: set to " + data['value']['lowerThreshold'] +
-          " - " + data['value']['upperThreshold'])
     write_thresholds_to_file(session["upperThreshold"], session["lowerThreshold"])
     return jsonify(success=True)
 
@@ -58,31 +55,18 @@ def get_temperature():
 
     if len(session[history_key]) == 0:
         new_temperature = round(random.uniform(12, 31), 1)
-        print(new_temperature)
     else:
         prev_temperature = float(session[history_key][-1]["temperature"])
         if prev_temperature < lower_threshold:
-            print("CASE 1")
             session[heater_key] = True
-            print("Heater is ON")
-            print(session[heater_key])
             new_temperature = increase_temperature(prev_temperature)
-            print(new_temperature)
         elif prev_temperature > upper_threshold:
-            print("CASE 2")
             session[heater_key] = False
-            print("Heater is OFF")
-            print(session[heater_key])
             new_temperature = decrease_temperature(prev_temperature)
-            print(new_temperature)
         elif session[heater_key]:
-            print("CASE 3")
             new_temperature = increase_temperature(prev_temperature)
-            print(new_temperature)
         elif not session[heater_key]:
-            print("CASE 4")
             new_temperature = decrease_temperature(prev_temperature)
-            print(new_temperature)
 
         if new_temperature < lower_threshold:
             session[heater_key] = True
@@ -96,7 +80,6 @@ def get_temperature():
     session.pop(history_key, default=None)
     session[history_key] = updated_history
 
-    print(session[history_key])
     return jsonify({'id': thermostat_id, 'temperature': new_temperature})
 
 

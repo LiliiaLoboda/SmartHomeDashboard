@@ -1,12 +1,8 @@
 import tkinter as tk
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from fileUtils import write_thresholds_to_file, load_file_without_session
 
 
 def button_click():
-    print("Input 1:", entry1.get())
-    print("Input 2:", entry2.get())
     write_thresholds_to_file(entry2.get(), entry1.get())
 
 window = tk.Tk()
@@ -26,18 +22,6 @@ button = tk.Button(window, text="Save", command=button_click, width=10, height=2
 
 entry1_label = tk.Label(window, text="Enter lower Threshold:", font=("Arial", 16))
 entry2_label = tk.Label(window, text="Enter upper Threshold:", font=("Arial", 16))
-
-# Create the chart figure and canvas
-figure = plt.Figure(figsize=(8, 6))
-canvas = FigureCanvasTkAgg(figure, master=window)
-
-# Create the chart plot
-temperature_data = []  # Store the temperature data
-ax = figure.add_subplot(111)
-ax.plot(temperature_data, marker='o')
-ax.set_title("Temperature Chart")
-ax.set_xlabel("Time")
-ax.set_ylabel("Temperature")
 
 entry1_label.grid(row=0, column=0)
 entry2_label.grid(row=1, column=0)
